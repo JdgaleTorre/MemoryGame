@@ -150,7 +150,7 @@ function markMatch(cardClass){
         }
     }
 
-    $('.' + cardClass).parent('li').addClass('match');
+    $('.' + cardClass.replace(" ", ".")).parent('li').addClass('match');
 }
 
 function unMarkCards(...cards){
