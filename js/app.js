@@ -47,7 +47,7 @@ function shuffle(array) {
 
 function printDeck(array){
     var deck = $('#deck');
-    console.log(deck);
+    //console.log(deck);
     deck.empty();
     for(const data of array){
         deck.append(`
@@ -63,12 +63,102 @@ function reset(){
     deck = shuffle(deck);
     printDeck(deck);
     printMove(moves);
-    lastcard=[];
+    open=[];
     
 }
 
 function printMove(count){
     $('.moves').text(count.toString());
+}
+
+function showCard(card){
+    var cardSelected = $(card).attr('class');
+
+    $("#message").empty();
+    if(cardSelected.includes('open')){
+        $("#message").empty().append("<span>The card its already selected</span>");
+        return false;
+    }
+    $(card).addClass("open show");
+    return true;
+}
+function obtainCard(element){
+    return $(element).children('i').attr('class');
+}
+
+function addOpen(card){
+    var cardClass = obtainCard(card);
+    open.push({ card: cardClass, match: false});
+    //console.log(open);
+}
+
+function countUnMatched(){
+    var count=0;
+
+    open.forEach(function(element){
+        if(element.match ===false){
+            count++;
+        }
+    });
+    return count;
+}
+
+
+function findMatch(element){
+    var cardClass = obtainCard(element);
+    var findUnMatched = false;
+    var cardUnMatched;
+
+    for(const card of open){
+        if(card.match === false){
+            findUnMatched = true;
+            cardUnMatched = card;
+            break;
+        }
+    }
+    console.log(findUnMatched);
+    if(findUnMatched){
+        moves++;
+        console.log(cardUnMatched.card ,cardClass);
+        if(cardUnMatched.card == cardClass){
+            markMatch(cardClass);
+        }
+        else{
+            console.log('aqui');
+            setTimeout(function(){
+                unMarkCards(cardUnMatched.card, cardClass);
+                hideCard(cardUnMatched.card, cardClass);
+            }, 2000);
+            
+        }
+    }
+
+}
+
+function hideCard(...cards){
+    //console.log(cards);
+    for(const card of cards){
+       // console.log($('.' + card.replace(" ", ".")), card);
+        $('.' + card.replace(" ", ".")).parent('li').removeClass('open show');
+    }
+}
+
+function markMatch(cardClass){
+    for(const card of open){
+        if(card.card== cardClass){
+            card.match=true; 
+        }
+    }
+
+    $('.' + cardClass).parent('li').addClass('match');
+}
+
+function unMarkCards(...cards){
+
+   for(const card of cards){
+       open.splice(open.indexOf(card),1);
+   }
+   console.log('unmark',open);
 }
 
 console.log(shuffle(deck));
@@ -77,41 +167,40 @@ printDeck(deck)
 
 $('#deck').on("click","li", function(){
     console.log($(this).children('i').attr('class'));
+   
+    if (showCard(this)){
+        addOpen(this);
+    }
+
+    if(countUnMatched()>1){
+        console.log('aqui');
+        findMatch(this);
+    }
     
-    var cardSelected = $(this).attr('class');
-    var card = $(this).children('i').attr('class');
 
-    console.log(cardSelected);
-    $("#message").empty();
-
-    if(cardSelected.includes('open')){
-        $("#message").empty().append("<span>The card its already selected</span>");
-        return;
-    }
-
-    if(open.length === 0){
-        open.push(card);
-        $(this).addClass("open show");
-    }
-    else{
-        var findMatch= false;
-        $(this).addClass("open show");
+    // if(open.length === 0){
         
-        for(const opencard of open){
-            if(opencard === card ){
-                findMatch=true;
-            }
-        }
-        if(findMatch){
-            $('.' + card).addClass('match');
-        }
-        else{
-            $('.' + card).removeClass('open show');
-        }
+    //     $(this).addClass("open show");
+    // }
+    // else{
+    //     var findMatch= false;
+        
+        
+    //     for(const opencard of open){
+    //         if(opencard === card ){
+    //             findMatch=true;
+    //         }
+    //     }
+    //     if(findMatch){
+    //         $('.' + card).addClass('match');
+    //     }
+    //     else{
+    //         $('.' + card).removeClass('open show');
+    //     }
 
         
-        moves++;       
-    }
+    //     moves++;       
+    // }
 
     printMove(moves);
 });
