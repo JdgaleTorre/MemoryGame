@@ -21,7 +21,7 @@ var deck = [
 ]
 
 var moves = 0;
-var lastcard = "";
+var open = [];
 
 /*
  * Display the cards on the page
@@ -63,7 +63,7 @@ function reset(){
     deck = shuffle(deck);
     printDeck(deck);
     printMove(moves);
-    lastcard='';
+    lastcard=[];
     
 }
 
@@ -79,6 +79,8 @@ $('#deck').on("click","li", function(){
     console.log($(this).children('i').attr('class'));
     
     var cardSelected = $(this).attr('class');
+    var card = $(this).children('i').attr('class');
+
     console.log(cardSelected);
     $("#message").empty();
 
@@ -87,13 +89,31 @@ $('#deck').on("click","li", function(){
         return;
     }
 
-    if(lastcard === ''){
-        lastcard = $(this).children('i').attr('class');
-        moves++;
-        printMove(moves);
+    if(open.length === 0){
+        open.push(card);
         $(this).addClass("open show");
     }
+    else{
+        var findMatch= false;
+        $(this).addClass("open show");
+        
+        for(const opencard of open){
+            if(opencard === card ){
+                findMatch=true;
+            }
+        }
+        if(findMatch){
+            $('.' + card).addClass('match');
+        }
+        else{
+            $('.' + card).removeClass('open show');
+        }
 
+        
+        moves++;       
+    }
+
+    printMove(moves);
 });
 
 
