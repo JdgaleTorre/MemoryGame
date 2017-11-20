@@ -1,6 +1,7 @@
 /*
  * Create a list that holds all of your cards
  */
+
 var deck = [
     "fa fa-diamond",
     "fa fa-diamond",
@@ -72,6 +73,8 @@ function printMove(count){
 }
 
 function showCard(card){
+    
+    $('.unshow').removeClass('unshow');
     var cardSelected = $(card).attr('class');
 
     $("#message").empty();
@@ -125,10 +128,12 @@ function findMatch(element){
         }
         else{
             console.log('aqui');
-            setTimeout(function(){
-                unMarkCards(cardUnMatched.card, cardClass);
-                hideCard(cardUnMatched.card, cardClass);
-            }, 2000);
+            unMarkCards(cardUnMatched.card, cardClass);
+            hideCard(cardUnMatched.card, cardClass);
+            // setTimeout(function(){
+            //     unMarkCards(cardUnMatched.card, cardClass);
+            //     hideCard(cardUnMatched.card, cardClass);
+            // }, 2000);
             
         }
     }
@@ -139,8 +144,17 @@ function hideCard(...cards){
     //console.log(cards);
     for(const card of cards){
        // console.log($('.' + card.replace(" ", ".")), card);
-        $('.' + card.replace(" ", ".")).parent('li').removeClass('open show');
+        $('.' + card.replace(" ", ".")).parent('li.open.show').toggleClass('unmatch').toggleClass('open show');
     }
+    setTimeout((cards) => {
+        console.log('Aqui setTimeout', cards);
+        for(const card of cards){
+             console.log( card.toString().replace(" ", "."));
+             $('.' + card.toString().replace(" ", ".")).parent('li.unmatch').toggleClass('unmatch').toggleClass('unshow');
+         }
+    }, 700, cards);
+
+    
 }
 
 function markMatch(cardClass){
@@ -177,33 +191,33 @@ $('#deck').on("click","li", function(){
         findMatch(this);
     }
     
-
-    // if(open.length === 0){
-        
-    //     $(this).addClass("open show");
-    // }
-    // else{
-    //     var findMatch= false;
-        
-        
-    //     for(const opencard of open){
-    //         if(opencard === card ){
-    //             findMatch=true;
-    //         }
-    //     }
-    //     if(findMatch){
-    //         $('.' + card).addClass('match');
-    //     }
-    //     else{
-    //         $('.' + card).removeClass('open show');
-    //     }
-
-        
-    //     moves++;       
-    // }
-
     printMove(moves);
+
+    won();
 });
+
+var won= function(){
+    var allMatch= true;
+
+    for( const card of open){
+        if(!card.match){
+            allMatch = false;
+            break;
+        }
+    }
+
+    if(allMatch && open.length === deck.length){
+        swal({
+            title: 'Congratulations! You Won!',
+            text: 'With ' + moves + ' and 1 Star. Woooooo',
+            type: 'success',
+            confirmButtonText: 'Play Again',
+            clickConfirm : reset()
+          });
+          //swal.clickConfirm(reset());
+    }
+
+}
 
 
 /*

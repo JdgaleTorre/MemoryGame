@@ -10,6 +10,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
+
+    
 </head>
 <body>
 
@@ -87,7 +89,21 @@
     <div id="message">
 
     </div>
+    <script src="js/r.js"></script>
+    <script>
+        window.__define = window.define;
+        window.__require = window.require;
+        window.define = undefined;
+        window.require = undefined;
+    </script>
+    <script src="js/sweetAlert.js"></script>
 
+    <script>
+        window.define = window.__define;
+        window.require = window.__require;
+        window.__define = undefined;
+        window.__require = undefined;
+    </script>
     <script src="js/app.js"></script>
 </body>
 </html>
