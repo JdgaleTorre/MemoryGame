@@ -48,7 +48,6 @@ function shuffle(array) {
 
 function printDeck(array){
     var deck = $('#deck');
-    //console.log(deck);
     deck.empty();
     for(const data of array){
         deck.append(`
@@ -77,9 +76,7 @@ function showCard(card){
     $('.unshow').removeClass('unshow');
     var cardSelected = $(card).attr('class');
 
-    $("#message").empty();
     if(cardSelected.includes('open')){
-        $("#message").empty().append("<span>The card its already selected</span>");
         return false;
     }
     $(card).addClass("open show");
@@ -92,7 +89,7 @@ function obtainCard(element){
 function addOpen(card){
     var cardClass = obtainCard(card);
     open.push({ card: cardClass, match: false});
-    //console.log(open);
+    
 }
 
 function countUnMatched(){
@@ -119,38 +116,28 @@ function findMatch(element){
             break;
         }
     }
-    console.log(findUnMatched);
+    
     if(findUnMatched){
         moves++;
-        console.log(cardUnMatched.card ,cardClass);
+        
         if(cardUnMatched.card == cardClass){
             markMatch(cardClass);
         }
         else{
-            console.log('aqui');
             unMarkCards(cardUnMatched.card, cardClass);
-            hideCard(cardUnMatched.card, cardClass);
-            // setTimeout(function(){
-            //     unMarkCards(cardUnMatched.card, cardClass);
-            //     hideCard(cardUnMatched.card, cardClass);
-            // }, 2000);
-            
+            hideCard(cardUnMatched.card, cardClass);            
         }
     }
 
 }
 
 function hideCard(...cards){
-    //console.log(cards);
     for(const card of cards){
-       // console.log($('.' + card.replace(" ", ".")), card);
         $('.' + card.replace(" ", ".")).parent('li.open.show').toggleClass('unmatch').toggleClass('open show');
     }
     setTimeout((cards) => {
-        console.log('Aqui setTimeout', cards);
         for(const card of cards){
-             console.log( card.toString().replace(" ", "."));
-             $('.' + card.toString().replace(" ", ".")).parent('li.unmatch').toggleClass('unmatch').toggleClass('unshow');
+            $('.' + card.toString().replace(" ", ".")).parent('li.unmatch').toggleClass('unmatch').toggleClass('unshow');
          }
     }, 700, cards);
 
@@ -172,27 +159,19 @@ function unMarkCards(...cards){
    for(const card of cards){
        open.splice(open.indexOf(card),1);
    }
-   console.log('unmark',open);
 }
 
-console.log(shuffle(deck));
 deck = shuffle(deck);
 printDeck(deck)
 
 $('#deck').on("click","li", function(){
-    console.log($(this).children('i').attr('class'));
-   
     if (showCard(this)){
         addOpen(this);
     }
-
     if(countUnMatched()>1){
-        console.log('aqui');
         findMatch(this);
     }
-    
     printMove(moves);
-
     won();
 });
 
@@ -209,12 +188,15 @@ var won= function(){
     if(allMatch && open.length === deck.length){
         swal({
             title: 'Congratulations! You Won!',
-            text: 'With ' + moves + ' and 1 Star. Woooooo',
+            text: 'With ' + moves + ' and 3 Star. Woooooo',
             type: 'success',
-            confirmButtonText: 'Play Again',
-            clickConfirm : reset()
+            confirmButtonText: 'Play Again'
+          }).then(function (result) {
+            if (result.value) {
+              reset();
+            }
           });
-          //swal.clickConfirm(reset());
+          
     }
 
 }
