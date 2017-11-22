@@ -23,6 +23,8 @@ var deck = [
 
 var moves = 0;
 var open = [];
+var time;
+var stars = 3;
 
 /*
  * Display the cards on the page
@@ -165,6 +167,11 @@ deck = shuffle(deck);
 printDeck(deck)
 
 $('#deck').on("click","li", function(){
+    //Start the timer
+    if(open.length==0){
+        time = new GameTimer();
+    }
+
     if (showCard(this)){
         addOpen(this);
     }
@@ -186,9 +193,12 @@ var won= function(){
     }
 
     if(allMatch && open.length === deck.length){
+        time.stopTimer();
+        let timeplayed = time.getTimeElapsed();
+
         swal({
             title: 'Congratulations! You Won!',
-            text: 'With ' + moves + ' and 3 Star. Woooooo',
+            text: 'You got ' + stars + ' stars with ' + moves + ' moves. With the time of ' + timeplayed,
             type: 'success',
             confirmButtonText: 'Play Again'
           }).then(function (result) {
@@ -201,6 +211,73 @@ var won= function(){
 
 }
 
+/*Gamer Time*/
+function GameTimer(){
+    const game_start_time = new Date().getTime();
+    var time_played;
+    
+
+    timer = setInterval(function(){
+
+        let current_time = new Date().getTime();
+        let current_time_played = current_time - game_start_time; //calculate time elapsed
+
+        let hrs = Math.floor((current_time_played % (1000 * 60 * 60 *24))/ (1000 * 60 * 60));
+        let mins = Math.floor((current_time_played % (1000 * 60 * 60))/ (1000 * 60));
+        let secs = Math.floor((current_time_played % ( 1000 * 60)) / 1000);
+
+        //time_value = hrs + ' hours ' + mins + ' mins ' + secs + ' secs '; 
+
+        if(secs < 10){
+            secs = '0' + secs;
+        }
+
+        if(mins < 10){
+            mins = '0' + mins;
+        }
+
+        if(hrs < 10){
+            hrs = '0' + hrs;
+        }
+
+        time_played = hrs + ':' + mins + ':' + secs;
+        $('.time-played').text(time_played);
+
+    },500);
+  
+}
+
+GameTimer.prototype.stopTimer = function(){
+    clearInterval(timer);
+
+    let current_time = new Date().getTime();
+    let current_time_played = current_time - GameTimer.game_start_time; //calculate time elapsed
+
+    let hrs = Math.floor((current_time_played % (1000 * 60 * 60 *24))/ (1000 * 60 * 60));
+    let mins = Math.floor((current_time_played % (1000 * 60 * 60))/ (1000 * 60));
+    let secs = Math.floor((current_time_played % ( 1000 * 60)) / 1000);
+
+    //time_value = hrs + ' hours ' + mins + ' mins ' + secs + ' secs '; 
+
+    if(secs < 10){
+        secs = '0' + secs;
+    }
+
+    if(mins < 10){
+        mins = '0' + mins;
+    }
+
+    if(hrs < 10){
+        hrs = '0' + hrs;
+    }
+
+    time_played = hrs + ':' + mins + ':' + secs;
+    $('.time-played').text(time_played);
+};
+
+GameTimer.prototype.getTimeElapsed = function(){
+    return GameTimer.time_played;
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
