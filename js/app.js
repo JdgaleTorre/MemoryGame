@@ -173,7 +173,7 @@ $('#deck').on("click", "li", function () {
         time = new GameTimer();
         console.log(time);
         tiempo = setInterval(function(){
-            time.time();
+            $('.time-played').text(time.time());
         },500);
     }
 
@@ -198,7 +198,7 @@ var won = function () {
     }
 
     if (allMatch && open.length === deck.length) {
-        time.stopTimer();
+        time.stopTimer(tiempo);
         let timeplayed = time.time_played;
         console.log(time);
 
@@ -247,7 +247,7 @@ GameTimer.prototype.time = function () {
 
     this.time_played = hrs + ':' + mins + ':' + secs;
     
-    $('.time-played').text(this.time_played);
+   return this.time_played;
 
 }
 
@@ -260,8 +260,8 @@ GameTimer.prototype.time = function () {
   
 // }
 
-GameTimer.prototype.stopTimer = function () {
-    clearInterval(tiempo);
+GameTimer.prototype.stopTimer = function (interval) {
+    clearInterval(interval);
 };
 
 
