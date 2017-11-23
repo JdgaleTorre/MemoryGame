@@ -61,17 +61,59 @@ function printDeck(array) {
 
 }
 
+//to reset the moves, shuffle the deck and start a new game
 function reset() {
     moves = 0;
     deck = shuffle(deck);
     printDeck(deck);
     printMove(moves);
     open = [];
+    printStars(3);
+    $('.time-played').text("00:00:00");
 
 }
 
 function printMove(count) {
     $('.moves').text(count.toString());
+}
+
+/*
+The perfect game its in 8 moves, then for the 3 stars you have 15 moves
+*/
+function countStars(){
+    let stars = 0;
+
+    if(moves < 16){
+        stars = 3;
+    }
+    else if(moves < 26){
+        stars = 2;
+    }
+    else{
+        stars = 1;
+    }
+
+    return stars;
+}
+
+function printStars(stars) {
+    switch(stars){
+        case 1:
+            $('#star1').removeClass('fa-star-o').addClass('fa-star');
+            $('#star2').removeClass('fa-star').addClass('fa-star-o');
+            $('#star3').removeClass('fa-star').addClass('fa-star-o');
+            break;
+        case 2:
+            $('#star1').removeClass('fa-star-o').addClass('fa-star');
+            $('#star2').removeClass('fa-star-o').addClass('fa-star');
+            $('#star3').removeClass('fa-star').addClass('fa-star-o');
+            break;
+        case 3:
+            $('#star1').removeClass('fa-star-o').addClass('fa-star');
+            $('#star2').removeClass('fa-star-o').addClass('fa-star');
+            $('#star3').removeClass('fa-star-o').addClass('fa-star');
+            break;
+    }
 }
 
 function showCard(card) {
@@ -106,7 +148,7 @@ function countUnMatched() {
     return count;
 }
 
-
+//If the cards are match then mark, 
 function findMatch(element) {
     var cardClass = obtainCard(element);
     var findUnMatched = false;
@@ -133,7 +175,7 @@ function findMatch(element) {
     }
 
 }
-
+//hide the cards in the page
 function hideCard(...cards) {
     for (const card of cards) {
         $('.' + card.replace(" ", ".")).parent('li.open.show').toggleClass('unmatch').toggleClass('open show');
@@ -164,9 +206,12 @@ function unMarkCards(...cards) {
     }
 }
 
+
+//Shuffle the deck and print
 deck = shuffle(deck);
 printDeck(deck)
 
+//adding the click listener for all the functionality
 $('#deck').on("click", "li", function () {
     //Start the timer
     if (moves === 0 && open.length === 0) {
@@ -184,6 +229,7 @@ $('#deck').on("click", "li", function () {
         findMatch(this);
     }
     printMove(moves);
+    printStars(countStars())
     won();
 });
 
