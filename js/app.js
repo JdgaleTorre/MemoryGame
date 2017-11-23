@@ -25,6 +25,7 @@ var moves = 0;
 var open = [];
 var time;
 var stars = 3;
+var tiempo;
 
 /*
  * Display the cards on the page
@@ -48,10 +49,10 @@ function shuffle(array) {
     return array;
 }
 
-function printDeck(array){
+function printDeck(array) {
     var deck = $('#deck');
     deck.empty();
-    for(const data of array){
+    for (const data of array) {
         deck.append(`
         <li class="card">
             <i class="` + data + `"></i>
@@ -60,45 +61,45 @@ function printDeck(array){
 
 }
 
-function reset(){
-    moves=0;
+function reset() {
+    moves = 0;
     deck = shuffle(deck);
     printDeck(deck);
     printMove(moves);
-    open=[];
-    
+    open = [];
+
 }
 
-function printMove(count){
+function printMove(count) {
     $('.moves').text(count.toString());
 }
 
-function showCard(card){
-    
+function showCard(card) {
+
     $('.unshow').removeClass('unshow');
     var cardSelected = $(card).attr('class');
 
-    if(cardSelected.includes('open')){
+    if (cardSelected.includes('open')) {
         return false;
     }
     $(card).addClass("open show");
     return true;
 }
-function obtainCard(element){
+function obtainCard(element) {
     return $(element).children('i').attr('class');
 }
 
-function addOpen(card){
+function addOpen(card) {
     var cardClass = obtainCard(card);
-    open.push({ card: cardClass, match: false});
-    
+    open.push({ card: cardClass, match: false });
+
 }
 
-function countUnMatched(){
-    var count=0;
+function countUnMatched() {
+    var count = 0;
 
-    open.forEach(function(element){
-        if(element.match ===false){
+    open.forEach(function (element) {
+        if (element.match === false) {
             count++;
         }
     });
@@ -106,178 +107,163 @@ function countUnMatched(){
 }
 
 
-function findMatch(element){
+function findMatch(element) {
     var cardClass = obtainCard(element);
     var findUnMatched = false;
     var cardUnMatched;
 
-    for(const card of open){
-        if(card.match === false){
+    for (const card of open) {
+        if (card.match === false) {
             findUnMatched = true;
             cardUnMatched = card;
             break;
         }
     }
-    
-    if(findUnMatched){
+
+    if (findUnMatched) {
         moves++;
-        
-        if(cardUnMatched.card == cardClass){
+
+        if (cardUnMatched.card == cardClass) {
             markMatch(cardClass);
         }
-        else{
+        else {
             unMarkCards(cardUnMatched.card, cardClass);
-            hideCard(cardUnMatched.card, cardClass);            
+            hideCard(cardUnMatched.card, cardClass);
         }
     }
 
 }
 
-function hideCard(...cards){
-    for(const card of cards){
+function hideCard(...cards) {
+    for (const card of cards) {
         $('.' + card.replace(" ", ".")).parent('li.open.show').toggleClass('unmatch').toggleClass('open show');
     }
     setTimeout((cards) => {
-        for(const card of cards){
+        for (const card of cards) {
             $('.' + card.toString().replace(" ", ".")).parent('li.unmatch').toggleClass('unmatch').toggleClass('unshow');
-         }
+        }
     }, 700, cards);
 
-    
+
 }
 
-function markMatch(cardClass){
-    for(const card of open){
-        if(card.card== cardClass){
-            card.match=true; 
+function markMatch(cardClass) {
+    for (const card of open) {
+        if (card.card == cardClass) {
+            card.match = true;
         }
     }
 
     $('.' + cardClass.replace(" ", ".")).parent('li').addClass('match');
 }
 
-function unMarkCards(...cards){
+function unMarkCards(...cards) {
 
-   for(const card of cards){
-       open.splice(open.indexOf(card),1);
-   }
+    for (const card of cards) {
+        open.splice(open.indexOf(card), 1);
+    }
 }
 
 deck = shuffle(deck);
 printDeck(deck)
 
-$('#deck').on("click","li", function(){
+$('#deck').on("click", "li", function () {
     //Start the timer
-    if(open.length==0){
+    if (moves === 0 && open.length === 0) {
         time = new GameTimer();
+        console.log(time);
+        tiempo = setInterval(function(){
+            time.time();
+        },500);
     }
 
-    if (showCard(this)){
+    if (showCard(this)) {
         addOpen(this);
     }
-    if(countUnMatched()>1){
+    if (countUnMatched() > 1) {
         findMatch(this);
     }
     printMove(moves);
     won();
 });
 
-var won= function(){
-    var allMatch= true;
+var won = function () {
+    var allMatch = true;
 
-    for( const card of open){
-        if(!card.match){
+    for (const card of open) {
+        if (!card.match) {
             allMatch = false;
             break;
         }
     }
 
-    if(allMatch && open.length === deck.length){
+    if (allMatch && open.length === deck.length) {
         time.stopTimer();
-        let timeplayed = time.getTimeElapsed();
+        let timeplayed = time.time_played;
+        console.log(time);
 
         swal({
             title: 'Congratulations! You Won!',
             text: 'You got ' + stars + ' stars with ' + moves + ' moves. With the time of ' + timeplayed,
             type: 'success',
             confirmButtonText: 'Play Again'
-          }).then(function (result) {
+        }).then(function (result) {
             if (result.value) {
-              reset();
+                reset();
             }
-          });
-          
+        });
+
     }
 
 }
 
 /*Gamer Time*/
-function GameTimer(){
-    const game_start_time = new Date().getTime();
-    var time_played;
-    
-
-    timer = setInterval(function(){
-
-        let current_time = new Date().getTime();
-        let current_time_played = current_time - game_start_time; //calculate time elapsed
-
-        let hrs = Math.floor((current_time_played % (1000 * 60 * 60 *24))/ (1000 * 60 * 60));
-        let mins = Math.floor((current_time_played % (1000 * 60 * 60))/ (1000 * 60));
-        let secs = Math.floor((current_time_played % ( 1000 * 60)) / 1000);
-
-        //time_value = hrs + ' hours ' + mins + ' mins ' + secs + ' secs '; 
-
-        if(secs < 10){
-            secs = '0' + secs;
-        }
-
-        if(mins < 10){
-            mins = '0' + mins;
-        }
-
-        if(hrs < 10){
-            hrs = '0' + hrs;
-        }
-
-        time_played = hrs + ':' + mins + ':' + secs;
-        $('.time-played').text(time_played);
-
-    },500);
-  
+var GameTimer = function () {
+    this.game_start_time = new Date().getTime();
+    this.time_played = "";
 }
 
-GameTimer.prototype.stopTimer = function(){
-    clearInterval(timer);
-
+GameTimer.prototype.time = function () {
     let current_time = new Date().getTime();
-    let current_time_played = current_time - GameTimer.game_start_time; //calculate time elapsed
+    let current_time_played = current_time - this.game_start_time; //calculate time elapsed
 
-    let hrs = Math.floor((current_time_played % (1000 * 60 * 60 *24))/ (1000 * 60 * 60));
-    let mins = Math.floor((current_time_played % (1000 * 60 * 60))/ (1000 * 60));
-    let secs = Math.floor((current_time_played % ( 1000 * 60)) / 1000);
+    let hrs = Math.floor((current_time_played % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let mins = Math.floor((current_time_played % (1000 * 60 * 60)) / (1000 * 60));
+    let secs = Math.floor((current_time_played % (1000 * 60)) / 1000);
 
     //time_value = hrs + ' hours ' + mins + ' mins ' + secs + ' secs '; 
 
-    if(secs < 10){
+    if (secs < 10) {
         secs = '0' + secs;
     }
 
-    if(mins < 10){
+    if (mins < 10) {
         mins = '0' + mins;
     }
 
-    if(hrs < 10){
+    if (hrs < 10) {
         hrs = '0' + hrs;
     }
 
-    time_played = hrs + ':' + mins + ':' + secs;
-    $('.time-played').text(time_played);
+    this.time_played = hrs + ':' + mins + ':' + secs;
+    
+    $('.time-played').text(this.time_played);
+
+}
+
+// function GameTimer() {
+//     const game_start_time = new Date().getTime();
+//     var time_played;
+
+
+//     timer = 
+  
+// }
+
+GameTimer.prototype.stopTimer = function () {
+    clearInterval(tiempo);
 };
 
-GameTimer.prototype.getTimeElapsed = function(){
-    return GameTimer.time_played;
-}
 
 /*
  * set up the event listener for a card. If a card is clicked:
