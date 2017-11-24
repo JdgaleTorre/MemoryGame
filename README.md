@@ -4,6 +4,7 @@
 
 * [Instructions](#instructions)
 * [Contributing](#contributing)
+* [How to play](#how to play)
 
 ## Instructions
 
@@ -18,3 +19,12 @@ For specific, detailed instructions, look at the project instructions in the [Ud
 This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
 
 For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## How to play
+
+Clone the repository and then open the `index.html`. In this game have to find the two cards with the same symbol.
+When click the first Card, the timer will start. You win when find the 8 couples of cards.
+
+You will get 3 stars if you win the game with less than 16 moves, 2 stars if you win the game with less than 26 moves,
+1 stars if you get more than 26 moves.
+

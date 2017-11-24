@@ -95,7 +95,7 @@ function countStars(){
 
     return stars;
 }
-
+//Print how many stars the player get
 function printStars(stars) {
     switch(stars){
         case 1:
@@ -130,13 +130,13 @@ function showCard(card) {
 function obtainCard(element) {
     return $(element).children('i').attr('class');
 }
-
+//Add a card if the player click card
 function addOpen(card) {
     var cardClass = obtainCard(card);
     open.push({ card: cardClass, match: false });
 
 }
-
+//Count if there is an open car unmatched
 function countUnMatched() {
     var count = 0;
 
@@ -188,7 +188,7 @@ function hideCard(...cards) {
 
 
 }
-
+//Mark as match if the player get the match
 function markMatch(cardClass) {
     for (const card of open) {
         if (card.card == cardClass) {
@@ -199,8 +199,8 @@ function markMatch(cardClass) {
     $('.' + cardClass.replace(" ", ".")).parent('li').addClass('match');
 }
 
+//UnMark the card if the player get the wrong match
 function unMarkCards(...cards) {
-
     for (const card of cards) {
         open.splice(open.indexOf(card), 1);
     }
@@ -232,7 +232,8 @@ $('#deck').on("click", "li", function () {
     printStars(countStars())
     won();
 });
-
+//To identified if the player won, verified if the cards and 
+//the cards opens are equals
 var won = function () {
     var allMatch = true;
 
@@ -268,7 +269,7 @@ var GameTimer = function () {
     this.game_start_time = new Date().getTime();
     this.time_played = "";
 }
-
+//Get the time when the play start and return the time played
 GameTimer.prototype.time = function () {
     let current_time = new Date().getTime();
     let current_time_played = current_time - this.game_start_time; //calculate time elapsed
@@ -296,16 +297,7 @@ GameTimer.prototype.time = function () {
    return this.time_played;
 
 }
-
-// function GameTimer() {
-//     const game_start_time = new Date().getTime();
-//     var time_played;
-
-
-//     timer = 
-  
-// }
-
+//To stop the interval that is showing the timer
 GameTimer.prototype.stopTimer = function (interval) {
     clearInterval(interval);
 };
