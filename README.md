@@ -19,8 +19,6 @@ Im glad if you want to improve the game.
 
 This repository is a Memory Game. You can pull and make changes if you think there its some improve we can do.
 
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
-
 ## HowToPlay
 
 Clone the repository and then open the `index.html`. In this game have to find the two cards with the same symbol.
