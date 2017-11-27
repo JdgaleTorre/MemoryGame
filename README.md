@@ -5,6 +5,7 @@
 * [Instructions](#instructions)
 * [Contributing](#contributing)
 * [How to play](#howtoplay)
+* [License](#license)
 
 ## Instructions
 
@@ -31,7 +32,7 @@ You will get 3 stars if you win the game with less than 16 moves, 2 stars if you
 ## License
 MIT License
 
-Copyright (c) [year] [fullname]
+Copyright (c) 2017 MemoryGame
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
