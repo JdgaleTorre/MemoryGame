@@ -249,6 +249,8 @@ var won = function () {
         let timeplayed = time.time_played;
         console.log(time);
 
+        stars = countStars();
+
         swal({
             title: 'Congratulations! You Won!',
             text: 'You got ' + stars + ' stars with ' + moves + ' moves. With the time of ' + timeplayed,
