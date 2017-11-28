@@ -2,7 +2,7 @@
  * Create a list that holds all of your cards
  */
 
-const deck = [
+let deck = [
     "fa fa-diamond",
     "fa fa-diamond",
     "fa fa-paper-plane-o",
