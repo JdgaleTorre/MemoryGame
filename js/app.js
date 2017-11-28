@@ -68,6 +68,7 @@ reset timer
 start a new game
 */
 function reset() {
+    time.stopTimer(tiempo);
     moves = 0;
     deck = shuffle(deck);
     printDeck(deck);
